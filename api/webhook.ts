@@ -1,13 +1,26 @@
 require('dotenv').config();
-import { IncomingMessage, ServerResponse } from 'http';
-import { Bot } from "grammy";
+const TelegramBot = require('node-telegram-bot-api');
+process.env.NTBA_FIX_319 = 'test';
 
 
-module.exports = async (request:IncomingMessage, response:ServerResponse) => {
-  const bot = new Bot(`${process.env.TELEGRAM_BOT_TOKEN}`);
+module.exports = async (request:any, response:any) => {
+  try {
+    const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 
-  bot.on("message:text", (ctx) => ctx.reply("Echo: " + ctx.message.text));
-  
-  bot.start();
+    const { body } = request;
+
+    if (body.message) {
+        const { chat: { id }, text } = body.message;
+        const message = `✅ Thanks for your message: *"${text}"*\nHave a great day! 👋🏻`;
+
+        await bot.sendMessage(id, message, {parse_mode: 'Markdown'});
+    }
+}
+catch(error) {
+    console.error('Error sending message');
+    console.log(error);
+}
+
+response.send('OK');
   
 }
