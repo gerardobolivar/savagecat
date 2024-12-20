@@ -1,0 +1,16 @@
+name: Simple GitHub Actions Workflow
+
+on: [push]
+
+jobs:
+  say_hello:
+    runs-on: ubuntu_latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Run Build Script
+        run: |
+          echo "Hello from GitHub actions!"
+
